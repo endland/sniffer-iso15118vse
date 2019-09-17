@@ -1,3 +1,7 @@
+Wireshark version
+------------
+wireshark_3.0.1
+
 General Information
 -------------------
 
@@ -17,30 +21,26 @@ The official home of Wireshark is https://www.wireshark.org.
 
 The latest distribution can be found in the subdirectory https://www.wireshark.org/download
 
-Wireshark version
-------------
-wireshark_3.0.1
-
 Wireshark + ISO15118VSE
 ------------
 
-## Different from wireshark as shown below
+### Whats different from wireshark?
 
-1. add OUI to dissect ISO15118 VSE message
+1. Add OUI to dissect ISO15118 VSE message
 
     * /wireshark_vse_version/epan/dissectors/oui.h
 
       * line 85 - 87 : add OUI (0x70b3d5)
 
 
-2. when OUI == 0x70b3d5
+2. Call function when OUI == 0x70b3d5
 
     * /wireshark_vse_version/epan/dissectors/packet-ieee80211.c
 
       * line 19822 - 19832 :  if OUI == 0x70b3d5, goto line 13284 and call (dissect_vendor_ie_v2g) function
 
 
-3. add variables for dissecting
+3. Add variables for dissecting
 
     * /wireshark_vse_version/epan/dissectors/packet-ieee80211.c
 
@@ -49,18 +49,18 @@ Wireshark + ISO15118VSE
                             The expansion of this node is controlled by the ett_v2g_flags_tree variable.
       * line 36716 - 36718 :  add ett_v2g_flags_tree
 
-4. dissect_vendor_ie_v2g function
+4. Dissect_vendor_ie_v2g function
 
     * /wireshark_vse_version/epan/dissectors/packet-ieee80211.c
 
       * line 13284 - 13338 :  do the actual dissecting
 
-Example Messages
+Example messages
 ------------
 
-~~~
-Beacon Frame, Probe Response :
+### Beacon Frame, Probe Response :
 
+~~~
 If message shown as below :
 
   dd 25 70 b3 d5 31 90 01 03 44 45 58 59 5a 01 23 45 67 88 41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32
@@ -79,11 +79,9 @@ If message shown as below :
   41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32 -> additional information         remain bytes
 ~~~
 
-
+### Probe Request:
 
 ~~~
-Probe Request:
-
 If message shown as below :
 
   dd 0c 70 b3 d5 31 90 02 05 01 23 45 67 89
