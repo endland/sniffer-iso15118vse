@@ -13283,42 +13283,6 @@ decode_qos_parameter_set(proto_tree *tree, tvbuff_t *tvb, packet_info *pinfo, in
 
 /* added for ISO15118_VSE in appseclab */
 
-/*
-if ISO15118_VSE MSG as below ( Beacon Frmae, Probe Response ) :
-  dd 25 70 b3 d5 31 90 01 03 44 45 58 59 5a 01 23 45 67 88 41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32
-
-  dd -> tag number                                                                              1bytes
-  25 -> VSE message total length                                                                1bytes
-  70 b3 d5 -> OUI (70:b3:d5) in wireshark                  (this dissects in 19821 line)        3bytes
-
-  static int dissect_vendor_ie_v2g function dissect as below:
-  31 90 -> IAB (ISO TC22/SC31 15118)                                                            2bytes
-  01 -> Type Type (SECC)                                                                        1bytes
-  03 -> ETT                                                                                     1bytes
-  44 45 -> country code                                                                         2bytes
-  58 59 5a -> operator ID                                                                       3bytes
-  01 23 45 67 88 -> charging site id                                                            5bytes
-  41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32 -> additional information         remain bytes
-*/
-
-
-
-/*
-if ISO15118_VSE MSG as below ( Probe Request ) :
-  dd 0c 70 b3 d5 31 90 02 05 01 23 45 67 89
-
-  dd -> tag number
-  0c -> VSE MSG total length                                                                    1bytes
-  70 b3 d5 -> OUI (70:b3:d5) in wireshark                 (this dissects in 19821 line)         3bytes
-
-  static int dissect_vendor_ie_v2g function dissect as below:
-  31 90 -> IAB (ISO TC22/SC31 15118)                                                            2bytes
-  02 -> Type (EVCC)                                                                             1bytes
-  05 -> ETT                                                                                     1bytes
-  01 23 45 67 89 -> additional information                                                      remain bytes
-*/
-
-
 static int
 dissect_vendor_ie_v2g(proto_tree *tree, tvbuff_t *tvb, int offset, guint32 tag_len)
 {

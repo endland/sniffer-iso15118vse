@@ -17,14 +17,14 @@ The official home of Wireshark is https://www.wireshark.org.
 
 The latest distribution can be found in the subdirectory https://www.wireshark.org/download
 
-Version
+Wireshark version
 ------------
 wireshark_3.0.1
 
 Wireshark + ISO15118VSE
 ------------
 
-##Whats different
+## Different from wireshark as shown below
 
 1. add OUI to dissect ISO15118 VSE message
 
@@ -55,10 +55,14 @@ Wireshark + ISO15118VSE
 
       * line 13284 - 13338 :  do the actual dissecting
 
-Added for ISO15118_VSE
+Example Messages
+------------
 
 ~~~
-if ISO15118_VSE MSG as below ( Beacon Frmae, Probe Response ) :
+Beacon Frame, Probe Response :
+
+If message shown as below :
+
   dd 25 70 b3 d5 31 90 01 03 44 45 58 59 5a 01 23 45 67 88 41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32
 
   dd -> tag number                                                                              1bytes
@@ -78,7 +82,10 @@ if ISO15118_VSE MSG as below ( Beacon Frmae, Probe Response ) :
 
 
 ~~~
-if ISO15118_VSE MSG as below ( Probe Request ) :
+Probe Request:
+
+If message shown as below :
+
   dd 0c 70 b3 d5 31 90 02 05 01 23 45 67 89
 
   dd -> tag number
