@@ -4791,7 +4791,7 @@ static int hf_ieee80211_rsn_gmcs_oui = -1;
 static int hf_ieee80211_rsn_gmcs_type = -1;
 static int hf_ieee80211_rsn_gmcs_80211_type = -1;
 
-/* added for ISO15118_VSE */
+/* added for ISO15118_VSE in appseclab */
 static int hf_ieee80211_v2g_ie_iab = -1;
 static int hf_ieee80211_v2g_ie_type = -1;
 static int hf_ieee80211_v2g_ie_ett = -1;
@@ -4803,7 +4803,7 @@ static int hf_ieee80211_v2g_ie_country_code = -1;
 static int hf_ieee80211_v2g_ie_oper_id = -1;
 static int hf_ieee80211_v2g_ie_charging_site_id = -1;
 static int hf_ieee80211_v2g_ie_additional_info = -1;
-/* added for ISO15118_VSE */
+/* added for ISO15118_VSE in appseclab */
 
 static int hf_ieee80211_wfa_ie_type = -1;
 static int hf_ieee80211_wfa_ie_wpa_version = -1;
@@ -5837,9 +5837,9 @@ static gint ett_rsn_cap_tree = -1;
 static gint ett_rsn_pmkid_tree = -1;
 static gint ett_rsn_gmcs_tree = -1;
 
-/* added for ISO15118_VSE */
+/* added for ISO15118_VSE in appseclab */
 static gint ett_v2g_flags_tree = -1;
-/* added for ISO15118_VSE */
+/* added for ISO15118_VSE in appseclab */
 
 static gint ett_wpa_mcs_tree = -1;
 static gint ett_wpa_ucs_tree = -1;
@@ -13281,17 +13281,17 @@ decode_qos_parameter_set(proto_tree *tree, tvbuff_t *tvb, packet_info *pinfo, in
   return offset;
 }
 
-/* added for ISO15118_VSE */
+/* added for ISO15118_VSE in appseclab */
 
 /*
-if ISO15118_VSE MSG is under below ( Beacon Frmae, Probe Response ) :
+if ISO15118_VSE MSG as below ( Beacon Frmae, Probe Response ) :
   dd 25 70 b3 d5 31 90 01 03 44 45 58 59 5a 01 23 45 67 88 41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32
 
   dd -> tag number                                                                              1bytes
   25 -> VSE message total length                                                                1bytes
   70 b3 d5 -> OUI (70:b3:d5) in wireshark                  (this dissects in 19821 line)        3bytes
 
-  static int dissect_vendor_ie_v2g function dissect under below:
+  static int dissect_vendor_ie_v2g function dissect as below:
   31 90 -> IAB (ISO TC22/SC31 15118)                                                            2bytes
   01 -> Type Type (SECC)                                                                        1bytes
   03 -> ETT                                                                                     1bytes
@@ -13304,14 +13304,14 @@ if ISO15118_VSE MSG is under below ( Beacon Frmae, Probe Response ) :
 
 
 /*
-if ISO15118_VSE MSG is under below ( Probe Request ) :
+if ISO15118_VSE MSG as below ( Probe Request ) :
   dd 0c 70 b3 d5 31 90 02 05 01 23 45 67 89
 
   dd -> tag number
   0c -> VSE MSG total length                                                                    1bytes
   70 b3 d5 -> OUI (70:b3:d5) in wireshark                 (this dissects in 19821 line)         3bytes
 
-  static int dissect_vendor_ie_v2g function dissect under below:
+  static int dissect_vendor_ie_v2g function dissect as below:
   31 90 -> IAB (ISO TC22/SC31 15118)                                                            2bytes
   02 -> Type (EVCC)                                                                             1bytes
   05 -> ETT                                                                                     1bytes
@@ -13384,7 +13384,7 @@ dissect_vendor_ie_v2g(proto_tree *tree, tvbuff_t *tvb, int offset, guint32 tag_l
   return offset;
 }
 
-/* added for ISO15118_VSE */
+/* added for ISO15118_VSE in appseclab */
 
 static int
 dissect_vendor_ie_wpawme(proto_tree *tree, tvbuff_t *tvb, packet_info *pinfo, int offset, guint32 tag_len, int ftype)
@@ -19819,9 +19819,11 @@ ieee80211_tag_vendor_specific_ie(tvbuff_t *tvb, packet_info *pinfo, proto_tree *
   switch (oui) {
     /* 802.11 specific vendor ids */
 
-    /* added for ISO15118_VSE
+    /* added for ISO15118_VSE in appseclab */
 
-      if message is under below
+    /*
+
+      if message as below
       dd 25 (70 b3 d5) 31 90 01 03 44 45 58 59 5a 01 23 45 67 88 41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32
       if (70 b3 d5) -> case OUI_V2G
 
@@ -19829,7 +19831,7 @@ ieee80211_tag_vendor_specific_ie(tvbuff_t *tvb, packet_info *pinfo, proto_tree *
     case OUI_V2G: // 70 b3 d5
       dissect_vendor_ie_v2g(tree, tvb, offset, tag_vs_len);
       break;
-    /* added for ISO15118_VSE */
+    /* added for ISO15118_VSE in appseclab */
 
     case OUI_WPAWME:
       dissect_vendor_ie_wpawme(tree, tvb, pinfo, offset, tag_vs_len, field_data->ftype);
@@ -33002,7 +33004,7 @@ proto_register_ieee80211(void)
       FT_NONE, BASE_NONE, 0x0, 0,
       NULL, HFILL }},
 
-    /* added for ISO15118_VSE */
+    /* added for ISO15118_VSE in appseclab */
     {&hf_ieee80211_v2g_ie_iab,
       {"IAB", "wlan.v2g.ie.iab",
       FT_UINT16, BASE_HEX, 0x0, 0,
@@ -33057,7 +33059,7 @@ proto_register_ieee80211(void)
       {"Additional Information", "wlan.v2g.ie.additional.info",
       FT_STRING, BASE_NONE, NULL, 0x0,
       NULL, HFILL }},
-    /* added for ISO15118_VSE */
+    /* added for ISO15118_VSE in appseclab */
 
     {&hf_ieee80211_wfa_ie_type,
      {"Type", "wlan.wfa.ie.type",
@@ -36714,9 +36716,9 @@ proto_register_ieee80211(void)
     &ett_rsn_cap_tree,
     &ett_rsn_pmkid_tree,
     &ett_rsn_gmcs_tree,
-    /* added for ISO15118_VSE */
+    /* added for ISO15118_VSE in appseclab */
     &ett_v2g_flags_tree,
-    /* added for ISO15118_VSE */
+    /* added for ISO15118_VSE in appseclab */
 
     &ett_wpa_mcs_tree,
     &ett_wpa_ucs_tree,
