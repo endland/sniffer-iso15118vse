@@ -1,5 +1,6 @@
 Version Information
 ------------
+
 wireshark_3.0.1
 
 General Information
@@ -28,30 +29,35 @@ Wireshark + ISO15118 Vendor Specific Element Message
 
 1. Add OUI to dissect ISO15118 VSE message
 
-    * /wireshark_vse_version/epan/dissectors/oui.h
+    * /wireshark15118vse/epan/dissectors/oui.h
 
       * line 85 - 87 : add OUI (0x70b3d5)
 
+2. ADD OUI Name
+	
+    * /wireshark15118vse/manuf
+	
+      * line 24725, 26569 :  Add OUI Name
 
-2. Call function when OUI == 0x70b3d5
+3. Call function when OUI == 0x70b3d5
 
-    * /wireshark_vse_version/epan/dissectors/packet-ieee80211.c
+    * /wireshark15118vse/epan/dissectors/packet-ieee80211.c
 
       * line 19822 - 19832 :  if OUI == 0x70b3d5, goto line 13284 and call (dissect_vendor_ie_v2g) function
 
 
-3. Add variables for dissecting
+4. Add variables for dissecting
 
-    * /wireshark_vse_version/epan/dissectors/packet-ieee80211.c
+    * /wireshark15118vse/epan/dissectors/packet-ieee80211.c
 
       * line 4794 - 4806 :  initialised to -1 that records our protocol
       * line 5840 - 5842 :  initialised to -1 when added a child node to the protocol tree which is where we will do our detail dissection.
                             The expansion of this node is controlled by the ett_v2g_flags_tree variable.
       * line 36716 - 36718 :  add ett_v2g_flags_tree
 
-4. Dissect_vendor_ie_v2g function
+5. Dissect_vendor_ie_v2g function
 
-    * /wireshark_vse_version/epan/dissectors/packet-ieee80211.c
+    * /wireshark15118vse/epan/dissectors/packet-ieee80211.c
 
       * line 13284 - 13338 :  do the actual dissecting
 
@@ -155,10 +161,10 @@ Sample Data
 
 4. click packet information(ssid == linux_ap)
 
-	1. click IEEE 802.11 wireless LAN
+	* click IEEE 802.11 wireless LAN
 
-	2. click Tagged Parameters (?bytes)
+	* click Tagged Parameters (nbytes)
 
-	3. click Tag : Vendor Specific: Vehicle to Grid and see information of the Message
+	* click Tag : Vendor Specific: Vehicle to Grid and see information of the Message
 
 
