@@ -1,4 +1,4 @@
-Wireshark version
+Version Information
 ------------
 wireshark_3.0.1
 
@@ -21,10 +21,10 @@ The official home of Wireshark is https://www.wireshark.org.
 
 The latest distribution can be found in the subdirectory https://www.wireshark.org/download
 
-Wireshark + ISO15118VSE
+Wireshark + ISO15118 Vendor Specific Element Message
 ------------
 
-### Whats different from wireshark?
+### What's different from wireshark?
 
 1. Add OUI to dissect ISO15118 VSE message
 
@@ -96,3 +96,39 @@ If message shown as below :
   05 -> ETT                                                                                     1bytes
   01 23 45 67 89 -> additional information                                                      remain bytes
 ~~~
+
+How to Install
+------------
+
+### Install Required Dependencies
+~~~
+
+1. sudo apt-get update
+
+2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
+~~~
+
+### Download wireshark from github and compile source code
+~~~
+3. mkdir /tmp
+
+4. cd /tmp
+
+5. git clone https://github.com/appseclab/wireshark15118vse
+
+6. mkdir /tmp/build
+
+7. cd /tmp/build
+
+8. cmake /tmp/wiresharkvse
+
+9. make
+
+### Install wireshark
+~~~
+10. sudo make install
+
+11. wireshark
+~~~
+
+
