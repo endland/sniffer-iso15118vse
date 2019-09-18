@@ -109,7 +109,7 @@ How to Install in ubuntu 18.04
 ### Install Required Dependencies
 
 ~~~
-1. sudo apt-get update
+1. sudo apt-get update && sudo apt-get upgrade
 
 2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
 ~~~
