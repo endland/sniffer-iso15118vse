@@ -97,18 +97,19 @@ If message shown as below :
   01 23 45 67 89 -> additional information                                                      remain bytes
 ~~~
 
-How to Install
+How to Install in ubuntu 18.04
 ------------
 
 ### Install Required Dependencies
-~~~
 
+~~~
 1. sudo apt-get update
 
 2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
 ~~~
 
 ### Download wireshark from github and compile source code
+
 ~~~
 3. mkdir /tmp
 
@@ -120,15 +121,44 @@ How to Install
 
 7. cd /tmp/build
 
-8. cmake /tmp/wiresharkvse
+8. cmake /tmp/wireshark15118vse
 
 9. make
+~~~
 
 ### Install wireshark
+
 ~~~
 10. sudo make install
 
 11. wireshark
 ~~~
+
+Sample Data
+------------
+
+1. run wireshark
+
+2. click file at the left corner and open "sample.pcapng" in wireshark15118vse folder
+
+3. filter beacon frame, probe request, probe response etc..
+
+	* beacon frame : wlan.fc.type_subtype eq 8
+
+	* probe request : wlan.fc.type_subtype eq 4
+
+	* probe response : wlan.fc.type_subtype eq 5
+
+	* association request : wlan.fc.type_subtype eq 0
+
+	* association response : wlan.fc.type_subtype eq 1
+
+4. click packet information(ssid == linux_ap)
+
+	1. click IEEE 802.11 wireless LAN
+
+	2. click Tagged Parameters (?bytes)
+
+	3. click Tag : Vendor Specific: Vehicle to Grid and see information of the Message
 
 
