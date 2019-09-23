@@ -1,7 +1,27 @@
-Version Information
+Goal of the project
 ------------
 
-wireshark_3.0.1
+
+Repository directories
+------------
+wireshark_src : source code of modified wireshark, based on version 3.0.1
+wireshark_15118vse.diff : Diff output between this project and wireshark 3.0.1
+screenshots : Screenshots of the execution of wireshark 15118 VSE feature
+sample_pcap : Sample packet capture file that includes beacon, association request/response messages
+
+How to install
+------------
+
+How to use
+------------
+
+Screenshots
+------------
+
+How wireshark is modified
+------------
+
+
 
 General Information
 -------------------
