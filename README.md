@@ -37,7 +37,7 @@ How to install
 
 7. cd /tmp/build
 
-8. cmake /tmp/wireshark15118vse
+8. cmake /tmp/wireshark15118vse/wireshark_src
 
 9. make
 ~~~
@@ -55,7 +55,7 @@ How to use
 
 1. run wireshark
 
-2. click file at the left corner and open "sample.pcapng" in wireshark15118vse folder
+2. click file at the left corner and open "sample.pcapng" in /wireshark15118vse/sample_pcap folder
 
 3. filter beacon frame, probe request, probe response etc..
 
@@ -87,35 +87,35 @@ How wireshark is modified
 
 1. Add OUI to dissect ISO15118 VSE message
 
-    * /wireshark15118vse/epan/dissectors/oui.h
+    * /wireshark15118vse/wireshark_src/epan/dissectors/oui.h
 
       * line 85 - 87 : add OUI (0x70b3d5)
 
 2. ADD OUI Name
 
-    * /wireshark15118vse/manuf
+    * /wireshark15118vse/wireshark_src/manuf
 
-      * line 24725, 26569 :  Add OUI Name
+      * line 24725, 26569 :  modify OUI Name IEEE Regiestration Authority to Vehicle to Grid
 
 3. Call function when OUI == 0x70b3d5
 
-    * /wireshark15118vse/epan/dissectors/packet-ieee80211.c
+    * /wireshark15118vse/wireshark_src/epan/dissectors/packet-ieee80211.c
 
       * line 19822 - 19832 :  if OUI == 0x70b3d5, goto line 13284 and call (dissect_vendor_ie_v2g) function
 
 
 4. Add variables for dissecting
 
-    * /wireshark15118vse/epan/dissectors/packet-ieee80211.c
+    * /wireshark15118vse/wireshark_src/epan/dissectors/packet-ieee80211.c
 
-      * line 4794 - 4806 :  initialised to -1 that records our protocol
-      * line 5840 - 5842 :  initialised to -1 when added a child node to the protocol tree which is where we will do our detail dissection.
+      * line 4794 - 4806 :  initialized to -1 that records our protocol
+      * line 5840 - 5842 :  initialized to -1 when added a child node to the protocol tree which is where we will do our detail dissection.
                             The expansion of this node is controlled by the ett_v2g_flags_tree variable.
       * line 36716 - 36718 :  add ett_v2g_flags_tree
 
 5. Dissect_vendor_ie_v2g function
 
-    * /wireshark15118vse/epan/dissectors/packet-ieee80211.c
+    * /wireshark15118vse/wireshark_src/epan/dissectors/packet-ieee80211.c
 
       * line 13284 - 13338 :  do the actual dissecting
 
