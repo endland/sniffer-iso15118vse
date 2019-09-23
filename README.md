@@ -4,48 +4,86 @@ Goal of the project
 
 Repository directories
 ------------
-wireshark_src : source code of modified wireshark, based on version 3.0.1
-wireshark_15118vse.diff : Diff output between this project and wireshark 3.0.1
-screenshots : Screenshots of the execution of wireshark 15118 VSE feature
-sample_pcap : Sample packet capture file that includes beacon, association request/response messages
+
+- wireshark_src : source code of modified wireshark, based on version 3.0.1
+
+- wireshark_15118vse.diff : Diff output between this project and wireshark 3.0.1
+
+- screenshots : Screenshots of the execution of wireshark 15118 VSE feature
+
+- sample_pcap : Sample packet capture file that includes beacon, association request/response messages
 
 How to install
 ------------
 
+### Install in ubuntu 18.04
+
+~~~
+1. sudo apt-get update && sudo apt-get upgrade
+
+2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
+~~~
+
+### Download wireshark from github and compile source code
+
+~~~
+3. mkdir /tmp
+
+4. cd /tmp
+
+5. git clone https://github.com/appseclab/wireshark15118vse
+
+6. mkdir /tmp/build
+
+7. cd /tmp/build
+
+8. cmake /tmp/wireshark15118vse
+
+9. make
+~~~
+
+### Install wireshark
+
+~~~
+10. sudo make install
+
+11. wireshark
+~~~
+
 How to use
 ------------
+
+1. run wireshark
+
+2. click file at the left corner and open "sample.pcapng" in wireshark15118vse folder
+
+3. filter beacon frame, probe request, probe response etc..
+
+	* beacon frame : wlan.fc.type_subtype eq 8
+
+	* probe request : wlan.fc.type_subtype eq 4
+
+	* probe response : wlan.fc.type_subtype eq 5
+
+	* association request : wlan.fc.type_subtype eq 0
+
+	* association response : wlan.fc.type_subtype eq 1
+
+4. click packet information(ssid == linux_ap)
+
+	* click IEEE 802.11 wireless LAN
+
+	* click Tagged Parameters (nbytes)
+
+	* click Tag : Vendor Specific: Vehicle to Grid and see information of the Message
 
 Screenshots
 ------------
 
+
+
 How wireshark is modified
 ------------
-
-
-
-General Information
--------------------
-
-Wireshark is a network traffic analyzer, or "sniffer", for Unix and
-Unix-like operating systems.  It uses Qt, a graphical user interface
-library, and libpcap, a packet capture and filtering library.
-
-The Wireshark distribution also comes with TShark, which is a
-line-oriented sniffer (similar to Sun's snoop or tcpdump) that uses the
-same dissection, capture-file reading and writing, and packet filtering
-code as Wireshark, and with editcap, which is a program to read capture
-files and write the packets from that capture file, possibly in a
-different capture file format, and with some packets possibly removed
-from the capture.
-
-The official home of Wireshark is https://www.wireshark.org.
-
-The latest distribution can be found in the subdirectory https://www.wireshark.org/download
-
-Wireshark + ISO15118 Vendor Specific Element Message
-------------
-
-### What's different from wireshark?
 
 1. Add OUI to dissect ISO15118 VSE message
 
@@ -54,9 +92,9 @@ Wireshark + ISO15118 Vendor Specific Element Message
       * line 85 - 87 : add OUI (0x70b3d5)
 
 2. ADD OUI Name
-	
+
     * /wireshark15118vse/manuf
-	
+
       * line 24725, 26569 :  Add OUI Name
 
 3. Call function when OUI == 0x70b3d5
@@ -122,69 +160,3 @@ If message shown as below :
   05 -> ETT                                                                                     1bytes
   01 23 45 67 89 -> additional information                                                      remain bytes
 ~~~
-
-How to Install in ubuntu 18.04
-------------
-
-### Install Required Dependencies
-
-~~~
-1. sudo apt-get update && sudo apt-get upgrade
-
-2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
-~~~
-
-### Download wireshark from github and compile source code
-
-~~~
-3. mkdir /tmp
-
-4. cd /tmp
-
-5. git clone https://github.com/appseclab/wireshark15118vse
-
-6. mkdir /tmp/build
-
-7. cd /tmp/build
-
-8. cmake /tmp/wireshark15118vse
-
-9. make
-~~~
-
-### Install wireshark
-
-~~~
-10. sudo make install
-
-11. wireshark
-~~~
-
-Sample Data
-------------
-
-1. run wireshark
-
-2. click file at the left corner and open "sample.pcapng" in wireshark15118vse folder
-
-3. filter beacon frame, probe request, probe response etc..
-
-	* beacon frame : wlan.fc.type_subtype eq 8
-
-	* probe request : wlan.fc.type_subtype eq 4
-
-	* probe response : wlan.fc.type_subtype eq 5
-
-	* association request : wlan.fc.type_subtype eq 0
-
-	* association response : wlan.fc.type_subtype eq 1
-
-4. click packet information(ssid == linux_ap)
-
-	* click IEEE 802.11 wireless LAN
-
-	* click Tagged Parameters (nbytes)
-
-	* click Tag : Vendor Specific: Vehicle to Grid and see information of the Message
-
-
