@@ -16,7 +16,7 @@ Repository directories
 How to install
 ------------
 
-### Install in ubuntu 18.04
+**Install in ubuntu 18.04**
 
 ~~~
 1. sudo apt-get update && sudo apt-get upgrade
@@ -24,7 +24,7 @@ How to install
 2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
 ~~~
 
-### Download wireshark from github and compile source code
+**Download wireshark from github and compile source code**
 
 ~~~
 3. mkdir /tmp
@@ -42,7 +42,7 @@ How to install
 9. make
 ~~~
 
-### Install wireshark
+**Run wireshark**
 
 ~~~
 10. sudo make install
