@@ -1,7 +1,7 @@
 Only in ../wireshark-3.0.1/: .editorconfig
 diff -r wireshark_src/epan/dissectors/packet-ieee80211.c ../wireshark-3.0.1/epan/dissectors/packet-ieee80211.c
 46d45
-< 
+<
 4794,4807d4792
 < /* added for ISO15118_VSE in appseclab */
 < static int hf_ieee80211_v2g_ie_iab = -1;
@@ -16,17 +16,17 @@ diff -r wireshark_src/epan/dissectors/packet-ieee80211.c ../wireshark-3.0.1/epan
 < static int hf_ieee80211_v2g_ie_charging_site_id = -1;
 < static int hf_ieee80211_v2g_ie_additional_info = -1;
 < /* added for ISO15118_VSE in appseclab */
-< 
+<
 5840,5843d5824
 < /* added for ISO15118_VSE in appseclab */
 < static gint ett_v2g_flags_tree = -1;
 < /* added for ISO15118_VSE in appseclab */
-< 
+<
 12987d12967
-< 
+<
 13284,13352d13263
 < /* added for ISO15118_VSE in appseclab */
-< 
+<
 < static int
 < dissect_vendor_ie_v2g(proto_tree *tree, tvbuff_t *tvb, int offset, guint32 tag_len)
 < {
@@ -37,30 +37,30 @@ diff -r wireshark_src/epan/dissectors/packet-ieee80211.c ../wireshark-3.0.1/epan
 <   char dc_buf[4] = {'\0', };
 <   char wpt_buf[5] = {'\0', };
 <   char acd_buf[5] = {'\0', };;
-< 
+<
 <   proto_tree_add_item(tree, hf_ieee80211_v2g_ie_iab, tvb, offset, 2, ENC_NA); // 31 90 -> IAB (ISO TC22/SC31 15118)  2bytes
 <   offset += 2; // 31 90 -> IAB (ISO TC22/SC31 15118)  2bytes
-< 
+<
 <   type = tvb_get_guint8(tvb, offset);
-< 
+<
 <   proto_tree_add_item(tree, hf_ieee80211_v2g_ie_type, tvb, offset, 1, ENC_NA); // 01 -> Type 1bytes
 <   offset += 1; // 01 -> Type 1bytes
-< 
+<
 <   /*
 <   0x0001 -> AC
 <   0x0002 -> DC
 <   0x0004 -> WPT
 <   0x0008 -> ACD
 <   */
-< 
+<
 <   ett = tvb_get_guint8(tvb, offset); // in this example 03(SECC) or 05(EVCC) -> ETT 1bytes
-< 
+<
 <   if(ett & 0x0001){ g_snprintf(ac_buf, sizeof(ac_buf), "AC "); }
 <   if(ett & 0x0002){ g_snprintf(dc_buf, sizeof(dc_buf), "DC "); }
 <   if(ett & 0x0004){ g_snprintf(wpt_buf, sizeof(wpt_buf), "WPT "); }
 <   if(ett & 0x0008){ g_snprintf(acd_buf, sizeof(acd_buf), "ACD "); }
 <   char *ett_buf = g_strconcat("Support: ", ac_buf, dc_buf, wpt_buf, acd_buf, NULL);
-< 
+<
 <   tf = proto_tree_add_uint_format(tree, hf_ieee80211_v2g_ie_ett, tvb, offset, 1, ett, "ETT: %s (0x%02x)", ett_buf, ett);
 <   field_tree = proto_item_add_subtree(tf, ett_v2g_flags_tree);
 <   proto_tree_add_boolean(field_tree, hf_ieee80211_v2g_ie_ett_ac, tvb, offset, 1, ett);
@@ -68,106 +68,106 @@ diff -r wireshark_src/epan/dissectors/packet-ieee80211.c ../wireshark-3.0.1/epan
 <   proto_tree_add_boolean(field_tree, hf_ieee80211_v2g_ie_ett_wpt, tvb, offset, 1, ett);
 <   proto_tree_add_boolean(field_tree, hf_ieee80211_v2g_ie_ett_acd, tvb, offset, 1, ett);
 <   offset += 1; // in this example 03(SECC) or 05(EVCC) -> ETT 1bytes
-< 
+<
 <   if(type == 0x02){ // EVCC version
 <     proto_tree_add_item(tree, hf_ieee80211_v2g_ie_additional_info, tvb, offset, tag_len-offset+3, ENC_ASCII | ENC_NA); // 01 23 45 67 89 -> additional information  remain bytes
 <     offset = tag_len + 3; // 01 23 45 67 89 -> additional information  remain bytes
-< 
+<
 <     return offset;
 <   }
-< 
+<
 <   // SECC version
 <   proto_tree_add_item(tree, hf_ieee80211_v2g_ie_country_code, tvb, offset, 2, ENC_ASCII | ENC_NA); //44 45 -> country code 2bytes
 <   offset += 2; //44 45 -> country code  2bytes
-< 
+<
 <   proto_tree_add_item(tree, hf_ieee80211_v2g_ie_oper_id, tvb, offset, 3, ENC_ASCII | ENC_NA); //58 59 5a -> operator ID 3bytes
 <   offset += 3; //58 59 5a -> operator ID 3bytes
-< 
+<
 <   proto_tree_add_item(tree, hf_ieee80211_v2g_ie_charging_site_id, tvb, offset, 5, ENC_NA); //01 23 45 67 88 -> charging site id 5bytes
 <   offset += 5; //01 23 45 67 88 -> charging site id 5bytes
-< 
+<
 <   proto_tree_add_item(tree, hf_ieee80211_v2g_ie_additional_info, tvb, offset, tag_len-offset+3, ENC_ASCII | ENC_NA); //41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32 -> additional information remain bytes
 <   offset = tag_len + 3; //41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32 -> additional information remain bytes
-< 
+<
 <   return offset;
 < }
-< 
+<
 < /* added for ISO15118_VSE in appseclab */
-< 
+<
 19785,19799d19695
-< 
+<
 <     /* added for ISO15118_VSE in appseclab */
-< 
+<
 <     /*
-< 
+<
 <       if message as below
 <       dd 25 (70 b3 d5) 31 90 01 03 44 45 58 59 5a 01 23 45 67 88 41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32
 <       if (70 b3 d5) -> case OUI_V2G
-< 
+<
 <     */
 <     case OUI_V2G: // 70 b3 d5
 <       dissect_vendor_ie_v2g(tree, tvb, offset, tag_vs_len);
 <       break;
 <     /* added for ISO15118_VSE in appseclab */
-< 
+<
 32971,33027d32866
 <     /* added for ISO15118_VSE in appseclab */
 <     {&hf_ieee80211_v2g_ie_iab,
 <       {"IAB", "wlan.v2g.ie.iab",
 <       FT_UINT16, BASE_HEX, 0x0, 0,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_type,
 <      {"Type", "wlan.v2g.ie.type",
 <       FT_UINT8, BASE_HEX, NULL, 0,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_ett,
 <       {"ETT", "wlan.v2g.ie.ett",
 <       FT_UINT8, BASE_HEX, NULL, 0x0,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_ett_ac,
 <       {"AC Status", "wlan.v2g.ie.ett.ac",
 <       FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0001,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_ett_dc,
 <       {"DC Status", "wlan.v2g.ie.ett.dc",
 <       FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0002,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_ett_wpt,
 <       {"WPT Status", "wlan.v2g.ie.ett.wpt",
 <       FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0004,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_ett_acd,
 <       {"ACD Status", "wlan.v2g.ie.ett.acd",
 <       FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0008,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_country_code,
 <       {"Country Code (ISO3166-1 alpha2)", "wlan.v2g.ie.country.code",
 <       FT_STRING, BASE_NONE, NULL, 0x0,
 <       "ISO 3166-1 Alpha-2 Country Code", HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_oper_id,
 <       {"Operator ID", "wlan.v2g.ie.oper.id",
 <       FT_STRING, BASE_NONE, NULL, 0x0,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_charging_site_id,
 <      {"Charging Site ID", "wlan.v2g.ie.charging.site.id",
 <       FT_UINT40, BASE_HEX, NULL, 0,
 <       NULL, HFILL }},
-< 
+<
 <     {&hf_ieee80211_v2g_ie_additional_info,
 <       {"Additional Information", "wlan.v2g.ie.additional.info",
 <       FT_STRING, BASE_NONE, NULL, 0x0,
 <       NULL, HFILL }},
 <     /* added for ISO15118_VSE in appseclab */
-< 
+<
 36683,36685d36521
 <     /* added for ISO15118_VSE in appseclab */
 <     &ett_v2g_flags_tree,
@@ -178,23 +178,19 @@ diff -r wireshark_src/epan/oui.h ../wireshark-3.0.1/epan/oui.h
 < #define OUI_V2G             0x70b3d5    /* RISEV2G */
 < /* added for ISO15118_VSE in appseclab */
 ---
-> 
+>
 Only in ../wireshark-3.0.1/: .gitlab-ci.yml
 Only in ../wireshark-3.0.1/: .mailmap
 diff -r wireshark_src/manuf ../wireshark-3.0.1/manuf
 24725c24725
-< 70:B3:D5	V2G	Vehicle to Grid
+< 70:B3:D5	IeeeRegi	IEEE (ISO15118)
 ---
 > 70:B3:D5	IeeeRegi	IEEE Registration Authority
-26569c26569
-< 70:B3:D5:9F:30:00/36	V2G	Vehicle to Grid
----
-> 70:B3:D5:9F:30:00/36	IeeeRegi	IEEE Registration Authority
 diff -r wireshark_src/packaging/nsis/wireshark.nsi ../wireshark-3.0.1/packaging/nsis/wireshark.nsi
 991d990
 < File "${STAGING_DIR}\plugins\${VERSION_MAJOR}.${VERSION_MINOR}\epan\foo.dll"
 diff -r wireshark_src/README.md ../wireshark-3.0.1/README.md
 19a20
-> 
+>
 Only in ../wireshark-3.0.1/: .travis.yml
 Only in ../wireshark-3.0.1/: .tx

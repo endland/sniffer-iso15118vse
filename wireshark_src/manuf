@@ -24722,7 +24722,7 @@
 70:B1:4E	ArrisGro	ARRIS Group, Inc.
 70:B2:65	HiltronS	Hiltron s.r.l.
 70:B3:17	Cisco	Cisco Systems, Inc
-70:B3:D5	V2G	Vehicle to Grid
+70:B3:D5	IeeeRegi	IEEE (ISO15118)
 70:B3:D5:00:10:00/36	SorediTo	SOREDI touch systems GmbH
 70:B3:D5:00:20:00/36	GogoBa	Gogo BA
 70:B3:D5:00:30:00/36	Anyroam
@@ -26566,7 +26566,7 @@
 70:B3:D5:9F:00:00/36	Fujicom	FUJICOM Co.,Ltd.
 70:B3:D5:9F:10:00/36	Rfel	RFEL Ltd
 70:B3:D5:9F:20:00/36	AcordeTe	Acorde Technologies
-70:B3:D5:9F:30:00/36	V2G	Vehicle to Grid
+70:B3:D5:9F:30:00/36	IeeeRegi	IEEE Registration Authority
 70:B3:D5:9F:40:00/36	TbandSrl	Tband srl
 70:B3:D5:9F:50:00/36	VickersE	Vickers Electronics Ltd
 70:B3:D5:9F:60:00/36	Edgeware	Edgeware AB
