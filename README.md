@@ -22,8 +22,20 @@ In particular, we modified the default IEEE802.11 dissector of Wireshark to
 - wireshark_src/epan/oui.h: Added OUI_V2G macro to recognize ISO15118 VSE
 - wireshark_src/epan/dissectors/packet-ieee80211.c: Added new dissector function to be called for parsing ISO15118 VSE
 
+Files and directories
 ------------
+
+- wireshark_src : source code of modified wireshark, based on version 3.0.1
+
+- sample_pcap : sample packet capture files for monitoring VSE. 
+
+- wireshark.diff : diff for modified sources
+
+- README.md : this file
+
+
 ## How to install (tested in Ubuntu 18.04)
+------------
 
 **Install necessary tools and libraries**
 ~~~
