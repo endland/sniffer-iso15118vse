@@ -1,17 +1,21 @@
-Goal of the project
-------------
+# Developing Wireshark plugin to monitor VSE (Vendor Specific Elements) defined in ISO15118-8
 
+## Background
+International standard for EV charging, ISO 15118, defines the communication between EV (Electric Vehicle) and EVSE (EV Supply Equipment, aka EV-Charger). The original standard published in 2014 assumes that EV and EVSE communicate by TCP/IP over PLC (Power Line Communication, GreenPHY) using the charging cable. In 2018, ISO also published ISO 15118 part 8, "Physical layer and data link layer requirements for wireless communication", enabling possibilities for EV and EVSE to communicate over wireless medium. IEEE 802.11n (High Throughput WiFi) was chosen for this communication. 
 
-Repository directories
-------------
+This standard (ISO 15118 part 8) defines requirements for EVCC (EV's communication controller) and SECC (EVSE's communication controller) in order to allow the followings:
+- SECC can announce its presence as a ISO15118-compliant SECC and compatible charging services it can provide
+- EVCC can discover and associate to a nearby SECC that is compatible to EV user's needs for charging
+- EVCC and SECC can maintain reliable communication throughout the charging session
 
-- wireshark_src : source code of modified wireshark, based on version 3.0.1
+At the heart of EV/EVSE discovery and association is VSE (Vendor-Specific Elements) in the management frames of 802.11: Beacon, Probe Request/Response, Association Request, and Reassociation Request. VSE can deliver service profile (SECC) or charging profile (EVCC) so that EVCC and SECC can selectively associate with each other based on the compatibility of the two. To implement ISO-compliant EVs and EVSEs, one needs to add necessary VSEs in 802.11 management frames and allow EVCC and SECC to make association decisions based on the compatibility with each other. We implemented this in our another project [Wifi15118](https://github.com/appseclab/wifi15118); SECC (acting as an 802.11 AP) can announce its charging capability in VSE and EVCC (acting as an 802.11 STA) can announce its charging service needs in VSE, based on which SECC and EVCC can selectively associate with each other only when they are compatible. 
 
-- wireshark_15118vse.diff : Diff output between this project and wireshark 3.0.1
+## Goals
+In this project, we aimed to extend the Wireshark tool so that it can capture the management frames of SECC and EVCC in the air and display the contents of VSE of EVCC and SECC in the Wireshark packet analyzer to help developers of ISO 15118 to easily monitor the communication between EVCC and SECC for debugging and testing purposes.
 
-- screenshots : Screenshots of the execution of wireshark 15118 VSE feature
-
-- sample_pcap : Sample packet capture file that includes beacon, association request/response messages
+In particular, we modified the default IEEE802.11 plugin of Wireshark to
+- monitor the content of ISO15118-compliant VSEs in Beacons and Probe Responses of an SECC
+- monitor the content of ISO15118-compliant VSEs in Probe Requests, Association Requests, and Reassociation Requests of an EVCC
 
 How to install
 ------------
@@ -21,7 +25,8 @@ How to install
 ~~~
 1. sudo apt-get update && sudo apt-get upgrade
 
-2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
+2. sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential 
+   automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
 ~~~
 
 **Download wireshark from github and compile source code**
