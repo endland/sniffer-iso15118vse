@@ -131,3 +131,28 @@ If message shown as below :
   05 -> ETT                                                                                     1bytes
   01 23 45 67 89 -> additional information                                                      remain bytes
 ~~~
+
+## Credit
+
+* Minho Shin (shinminho AT gmail DOT com, [homepage](http://hmcl.mju.ac.kr))
+    * Project director, Supporting developer
+* Sukjune Lee (robin00q at naver DOT com)
+    * Main developer
+* Kangsan Jang (rkdtks1005 AT gmail DOT com)
+    * Supporting developer (platform & testing & git repository)
+* Sungha Yoon (ysh5811 AT gmail DOT com)
+    * Supporting developer (platform & testing & git repository)
+
+* All affiliated with Applied Security Laboratory (ASLab), Dept. of Computer Engineering, Myongji University, Korea
+
+## Acknowledgements
+
+* This work is supported by Hyundai Motors, with following supporters
+
+  * Zeung Il Kim (endland AT hyundai DOT com, Global R&D Master, Hyundai Kia Namyang Technology Research Center)
+
+## References 
+
+* ISO 15118-2: International standard for EV-to-Charger communication (2014) [ISO website](https://www.iso.org/standard/55366.html)
+* ISO 15118-8: International standard for PHI/DL-layer requirements for wireless communication between EV and EV-Charger (2014) [ISO website](https://www.iso.org/standard/62984.html), [Preview](https://www.sis.se/api/document/preview/80001620/)
+
