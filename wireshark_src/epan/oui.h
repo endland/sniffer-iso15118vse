@@ -82,9 +82,9 @@
 #define OUI_WFA             0x506F9A    /* Wi-Fi Alliance */
 #define OUI_SMPTE           0x6897E8    /* Society of Motion Picture and Television Engineers */
 #define OUI_3GPP2           0xCF0002    /* 3GPP2 */
-/* added for ISO15118_VSE in appseclab */
-#define OUI_V2G             0x70b3d5    /* RISEV2G */
-/* added for ISO15118_VSE in appseclab */
+/* ASLAB_MJU [ */
+#define OUI_V2G             0x70b3d5    /* ISO 15118-8 */
+/* ] ASLAB_MJU */
 #endif
 
 /*
