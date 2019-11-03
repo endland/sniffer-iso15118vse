@@ -24722,7 +24722,7 @@
 70:B1:4E	ArrisGro	ARRIS Group, Inc.
 70:B2:65	HiltronS	Hiltron s.r.l.
 70:B3:17	Cisco	Cisco Systems, Inc
-70:B3:D5	IeeeRegi	IEEE (ISO15118)
+70:B3:D5	IeeeRegi	IEEE (ISO15118) # ASLAB_MJU 
 70:B3:D5:00:10:00/36	SorediTo	SOREDI touch systems GmbH
 70:B3:D5:00:20:00/36	GogoBa	Gogo BA
 70:B3:D5:00:30:00/36	Anyroam

@@ -1,0 +1,253 @@
+diff -Naur wireshark-3.0.1/epan/dissectors/packet-ieee80211.c wireshark_src/epan/dissectors/packet-ieee80211.c
+--- wireshark-3.0.1/epan/dissectors/packet-ieee80211.c	2019-04-09 03:39:58.000000000 +0900
++++ wireshark_src/epan/dissectors/packet-ieee80211.c	2019-11-03 23:19:07.000000000 +0900
+@@ -4790,6 +4790,21 @@
+ static int hf_ieee80211_rsn_gmcs_type = -1;
+ static int hf_ieee80211_rsn_gmcs_80211_type = -1;
+ 
++/* ASLAB_MJU [ */
++/* Initialize ISO15118 VSE/ETT */
++static int hf_ieee80211_v2g_ie_iab = -1;
++static int hf_ieee80211_v2g_ie_type = -1;
++static int hf_ieee80211_v2g_ie_ett = -1;
++static int hf_ieee80211_v2g_ie_ett_ac = -1;
++static int hf_ieee80211_v2g_ie_ett_dc = -1;
++static int hf_ieee80211_v2g_ie_ett_wpt = -1;
++static int hf_ieee80211_v2g_ie_ett_acd = -1;
++static int hf_ieee80211_v2g_ie_country_code = -1;
++static int hf_ieee80211_v2g_ie_oper_id = -1;
++static int hf_ieee80211_v2g_ie_charging_site_id = -1;
++static int hf_ieee80211_v2g_ie_additional_info = -1;
++/* ] ASLAB_MJU */
++
+ static int hf_ieee80211_wfa_ie_type = -1;
+ static int hf_ieee80211_wfa_ie_wpa_version = -1;
+ static int hf_ieee80211_wfa_ie_wpa_mcs = -1;
+@@ -5822,6 +5837,10 @@
+ static gint ett_rsn_pmkid_tree = -1;
+ static gint ett_rsn_gmcs_tree = -1;
+ 
++/* ASLAB_MJU [ */
++static gint ett_v2g_flags_tree = -1;
++/* ] ASLAB_MJU */
++
+ static gint ett_wpa_mcs_tree = -1;
+ static gint ett_wpa_ucs_tree = -1;
+ static gint ett_wpa_sub_ucs_tree = -1;
+@@ -12965,6 +12984,7 @@
+   }
+ }
+ 
++
+ /* WPA / WME */
+ static const value_string ieee802111_wfa_ie_type_vals[] = {
+   { 1, "WPA Information Element" },
+@@ -13261,6 +13281,75 @@
+   return offset;
+ }
+ 
++/* ASLAB_MJU [ */
++
++static int
++dissect_vendor_ie_v2g(proto_tree *tree, tvbuff_t *tvb, int offset, guint32 tag_len)
++{
++  guint8 ett, type;
++  proto_item *tf;
++  proto_tree *field_tree;
++  char ac_buf[4] = {'\0', };
++  char dc_buf[4] = {'\0', };
++  char wpt_buf[5] = {'\0', };
++  char acd_buf[5] = {'\0', };;
++
++  proto_tree_add_item(tree, hf_ieee80211_v2g_ie_iab, tvb, offset, 2, ENC_NA); // 31 90 -> IAB (ISO TC22/SC31 15118)  2bytes
++  offset += 2; // 31 90 -> IAB (ISO TC22/SC31 15118)  2bytes
++
++  type = tvb_get_guint8(tvb, offset);
++
++  proto_tree_add_item(tree, hf_ieee80211_v2g_ie_type, tvb, offset, 1, ENC_NA); // 01 -> Type 1bytes
++  offset += 1; // 01 -> Type 1bytes
++
++  /*
++  0x0001 -> AC
++  0x0002 -> DC
++  0x0004 -> WPT
++  0x0008 -> ACD
++  */
++
++  ett = tvb_get_guint8(tvb, offset); // in this example 03(SECC) or 05(EVCC) -> ETT 1bytes
++
++  if(ett & 0x0001){ g_snprintf(ac_buf, sizeof(ac_buf), "AC "); }
++  if(ett & 0x0002){ g_snprintf(dc_buf, sizeof(dc_buf), "DC "); }
++  if(ett & 0x0004){ g_snprintf(wpt_buf, sizeof(wpt_buf), "WPT "); }
++  if(ett & 0x0008){ g_snprintf(acd_buf, sizeof(acd_buf), "ACD "); }
++  char *ett_buf = g_strconcat("Support: ", ac_buf, dc_buf, wpt_buf, acd_buf, NULL);
++
++  tf = proto_tree_add_uint_format(tree, hf_ieee80211_v2g_ie_ett, tvb, offset, 1, ett, "ETT: %s (0x%02x)", ett_buf, ett);
++  field_tree = proto_item_add_subtree(tf, ett_v2g_flags_tree);
++  proto_tree_add_boolean(field_tree, hf_ieee80211_v2g_ie_ett_ac, tvb, offset, 1, ett);
++  proto_tree_add_boolean(field_tree, hf_ieee80211_v2g_ie_ett_dc, tvb, offset, 1, ett);
++  proto_tree_add_boolean(field_tree, hf_ieee80211_v2g_ie_ett_wpt, tvb, offset, 1, ett);
++  proto_tree_add_boolean(field_tree, hf_ieee80211_v2g_ie_ett_acd, tvb, offset, 1, ett);
++  offset += 1; // in this example 03(SECC) or 05(EVCC) -> ETT 1bytes
++
++  if(type == 0x02){ // EVCC version
++    proto_tree_add_item(tree, hf_ieee80211_v2g_ie_additional_info, tvb, offset, tag_len-offset+3, ENC_ASCII | ENC_NA); // 01 23 45 67 89 -> additional information  remain bytes
++    offset = tag_len + 3; // 01 23 45 67 89 -> additional information  remain bytes
++
++    return offset;
++  }
++
++  // SECC version
++  proto_tree_add_item(tree, hf_ieee80211_v2g_ie_country_code, tvb, offset, 2, ENC_ASCII | ENC_NA); //44 45 -> country code 2bytes
++  offset += 2; //44 45 -> country code  2bytes
++
++  proto_tree_add_item(tree, hf_ieee80211_v2g_ie_oper_id, tvb, offset, 3, ENC_ASCII | ENC_NA); //58 59 5a -> operator ID 3bytes
++  offset += 3; //58 59 5a -> operator ID 3bytes
++
++  proto_tree_add_item(tree, hf_ieee80211_v2g_ie_charging_site_id, tvb, offset, 5, ENC_NA); //01 23 45 67 88 -> charging site id 5bytes
++  offset += 5; //01 23 45 67 88 -> charging site id 5bytes
++
++  proto_tree_add_item(tree, hf_ieee80211_v2g_ie_additional_info, tvb, offset, tag_len-offset+3, ENC_ASCII | ENC_NA); //41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32 -> additional information remain bytes
++  offset = tag_len + 3; //41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32 -> additional information remain bytes
++
++  return offset;
++}
++
++/* ] ASLAB_MJU */
++
+ static int
+ dissect_vendor_ie_wpawme(proto_tree *tree, tvbuff_t *tvb, packet_info *pinfo, int offset, guint32 tag_len, int ftype)
+ {
+@@ -19693,6 +19782,21 @@
+ 
+   switch (oui) {
+     /* 802.11 specific vendor ids */
++
++    /* ASLAB_MJU [ */
++
++    /*
++	message:
++      dd 25 (70 b3 d5) 31 90 01 03 44 45 58 59 5a 01 23 45 67 88 41 43 3a 43 3d 31 7c 57 50 54 3a 5a 3d 32 3a 50 3d 31 2c 32
++
++      	(70 b3 d5) -> OUI_V2G
++    */
++
++    case OUI_V2G: // 70 b3 d5 defined in ../oui.h
++      dissect_vendor_ie_v2g(tree, tvb, offset, tag_vs_len);
++      break;
++    /* ] ASLAB_MJU */
++
+     case OUI_WPAWME:
+       dissect_vendor_ie_wpawme(tree, tvb, pinfo, offset, tag_vs_len, field_data->ftype);
+       break;
+@@ -32864,6 +32968,63 @@
+       FT_NONE, BASE_NONE, 0x0, 0,
+       NULL, HFILL }},
+ 
++    /* ASLAB_MJU [ */
++    {&hf_ieee80211_v2g_ie_iab,
++      {"IAB", "wlan.v2g.ie.iab",
++      FT_UINT16, BASE_HEX, 0x0, 0,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_type,
++     {"Type", "wlan.v2g.ie.type",
++      FT_UINT8, BASE_HEX, NULL, 0,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_ett,
++      {"ETT", "wlan.v2g.ie.ett",
++      FT_UINT8, BASE_HEX, NULL, 0x0,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_ett_ac,
++      {"AC Status", "wlan.v2g.ie.ett.ac",
++      FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0001,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_ett_dc,
++      {"DC Status", "wlan.v2g.ie.ett.dc",
++      FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0002,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_ett_wpt,
++      {"WPT Status", "wlan.v2g.ie.ett.wpt",
++      FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0004,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_ett_acd,
++      {"ACD Status", "wlan.v2g.ie.ett.acd",
++      FT_BOOLEAN, 8, TFS(&tfs_supported_not_supported), 0x0008,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_country_code,
++      {"Country Code (ISO3166-1 alpha2)", "wlan.v2g.ie.country.code",
++      FT_STRING, BASE_NONE, NULL, 0x0,
++      "ISO 3166-1 Alpha-2 Country Code", HFILL }},
++
++    {&hf_ieee80211_v2g_ie_oper_id,
++      {"Operator ID", "wlan.v2g.ie.oper.id",
++      FT_STRING, BASE_NONE, NULL, 0x0,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_charging_site_id,
++     {"Charging Site ID", "wlan.v2g.ie.charging.site.id",
++      FT_UINT40, BASE_HEX, NULL, 0,
++      NULL, HFILL }},
++
++    {&hf_ieee80211_v2g_ie_additional_info,
++      {"Additional Information", "wlan.v2g.ie.additional.info",
++      FT_STRING, BASE_NONE, NULL, 0x0,
++      NULL, HFILL }},
++    /* ] ASLAB_MJU */
++
+     {&hf_ieee80211_wfa_ie_type,
+      {"Type", "wlan.wfa.ie.type",
+       FT_UINT8, BASE_HEX, VALS(ieee802111_wfa_ie_type_vals), 0,
+@@ -36519,6 +36680,9 @@
+     &ett_rsn_cap_tree,
+     &ett_rsn_pmkid_tree,
+     &ett_rsn_gmcs_tree,
++    /* ASLAB_MJU [ */
++    &ett_v2g_flags_tree,
++    /* ] ASLAB_MJU */
+ 
+     &ett_wpa_mcs_tree,
+     &ett_wpa_ucs_tree,
+diff -Naur wireshark-3.0.1/epan/oui.h wireshark_src/epan/oui.h
+--- wireshark-3.0.1/epan/oui.h	2019-04-09 03:39:58.000000000 +0900
++++ wireshark_src/epan/oui.h	2019-10-30 06:10:50.000000000 +0900
+@@ -82,7 +82,9 @@
+ #define OUI_WFA             0x506F9A    /* Wi-Fi Alliance */
+ #define OUI_SMPTE           0x6897E8    /* Society of Motion Picture and Television Engineers */
+ #define OUI_3GPP2           0xCF0002    /* 3GPP2 */
+-
++/* ASLAB_MJU [ */
++#define OUI_V2G             0x70b3d5    /* ISO 15118-8 */
++/* ] ASLAB_MJU */
+ #endif
+ 
+ /*
+diff -Naur wireshark-3.0.1/manuf wireshark_src/manuf
+--- wireshark-3.0.1/manuf	2019-04-09 03:39:58.000000000 +0900
++++ wireshark_src/manuf	2019-11-03 05:08:51.000000000 +0900
+@@ -24722,7 +24722,7 @@
+ 70:B1:4E	ArrisGro	ARRIS Group, Inc.
+ 70:B2:65	HiltronS	Hiltron s.r.l.
+ 70:B3:17	Cisco	Cisco Systems, Inc
+-70:B3:D5	IeeeRegi	IEEE Registration Authority
++70:B3:D5	IeeeRegi	IEEE (ISO15118) # ASLAB_MJU 
+ 70:B3:D5:00:10:00/36	SorediTo	SOREDI touch systems GmbH
+ 70:B3:D5:00:20:00/36	GogoBa	Gogo BA
+ 70:B3:D5:00:30:00/36	Anyroam
+diff -Naur wireshark-3.0.1/packaging/nsis/wireshark.nsi wireshark_src/packaging/nsis/wireshark.nsi
+--- wireshark-3.0.1/packaging/nsis/wireshark.nsi	2019-04-09 03:39:58.000000000 +0900
++++ wireshark_src/packaging/nsis/wireshark.nsi	2019-10-30 05:34:29.000000000 +0900
+@@ -988,6 +988,7 @@
+ ;-------------------------------------------
+ SetOutPath '$INSTDIR\plugins\${VERSION_MAJOR}.${VERSION_MINOR}\epan'
+ File "${STAGING_DIR}\plugins\${VERSION_MAJOR}.${VERSION_MINOR}\epan\ethercat.dll"
++File "${STAGING_DIR}\plugins\${VERSION_MAJOR}.${VERSION_MINOR}\epan\foo.dll"
+ File "${STAGING_DIR}\plugins\${VERSION_MAJOR}.${VERSION_MINOR}\epan\gryphon.dll"
+ File "${STAGING_DIR}\plugins\${VERSION_MAJOR}.${VERSION_MINOR}\epan\irda.dll"
+ File "${STAGING_DIR}\plugins\${VERSION_MAJOR}.${VERSION_MINOR}\epan\opcua.dll"
