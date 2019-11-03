@@ -43,7 +43,6 @@
  * http://isotc.iso.org/livelink/livelink/fetch/-8913189/8913214/8913250/8913253/JTC001-N-9880.pdf?nodeid=8500308&vernum=-2
  */
 
-
 #include "config.h"
 
 #include <math.h>
