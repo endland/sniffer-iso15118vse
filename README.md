@@ -80,6 +80,10 @@ $ run/wireshark
 	* association request : wlan.fc.type_subtype eq 0
 
 	* association response : wlan.fc.type_subtype eq 1
+	
+	* reassociation request : wlan.fc.type_subtype eq 2
+	
+	* reassociation response : wlan.fc.type_subtype eq 3
 
 * click packet information with ssid == linux_ap
 
@@ -91,6 +95,18 @@ $ run/wireshark
 
 Screenshots
 ------------
+
+1. Filter Using Wireshark filters
+
+2. If wireshark's INFO part is SSID=linux_ap
+
+3. Expand ( IEEE 802.11 wireless LAN ) window
+
+4. Expand ( Tag: Vendor Specific : IEEE (ISO15118) ) window
+
+![beacon_frame](https://github.com/appseclab/sniffer-iso15118vse/blob/master/example_png/beacon_frame_example.png)
+
+![probe_response](https://github.com/appseclab/sniffer-iso15118vse/blob/master/example_png/probe_response_example.png)
 
 Example VSE and its fields
 ------------
@@ -138,7 +154,7 @@ If message shown as below :
     * Project director, Supporting developer
 * Sukjune Lee (robin00q at naver DOT com)
     * Main developer
-* Kangsan Jang (rkdtks1005 AT gmail DOT com)
+* Kangsan Chang (kangsanchang AT gmail DOT com)
     * Supporting developer (platform & testing & git repository)
 * Sungha Yoon (ysh5811 AT gmail DOT com)
     * Supporting developer (platform & testing & git repository)
